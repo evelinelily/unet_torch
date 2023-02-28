@@ -1,0 +1,77 @@
+{
+  "data_root": [
+    "/workspace/di_group1/atesi_sz/data_processed_special/segmentation/xuhan34"
+  ],
+  "split_csv_savepath":"output/data/ats_sq_refactor/el/xuhan34/20221110.xlsx",
+  "ts_ratio": 0.2,
+  "split_num": 2,
+
+  "name": "UNet",
+  "n_gpu": 1,
+  "use_synch_bn": false,
+
+  "arch": {
+    "type": "UNet",
+    "args": {
+      "backbone": "",
+      "freeze_bn": false,
+      "freeze_backbone": false
+    }
+  },
+  "train_loader": {
+    "type": "VOCself",
+    "args":{
+      "data_dir": "output/data/ats_sq_refactor/el/xuhan34/20221110.xlsx",
+      "batch_size": 8,
+      "crop_size": [128, 512],
+      "shuffle": true,
+      "split": "train",
+      "num_workers": 4
+    }
+  },
+
+  "val_loader": {
+    "type": "VOCself",
+    "args":{
+      "data_dir": "output/data/ats_sq_refactor/el/xuhan34/20221110.xlsx",
+      "batch_size": 8,
+      "crop_size": [128, 512],
+      "val": true,
+      "split": "val",
+      "num_workers": 4
+    }
+  },
+
+  "optimizer": {
+    "type": "SGD",
+    "differential_lr": true,
+    "args":{
+      "lr": 0.01,
+      "weight_decay": 1e-4,
+      "momentum": 0.9
+    }
+  },
+
+  "loss": "CrossEntropyLoss2d",
+  "ignore_index": 255,
+  "lr_scheduler": {
+    "type": "Poly",
+    "args": {}
+  },
+
+  "trainer": {
+    "epochs": 1000,
+    "save_dir": "output/train/ats_sq_refactor/el/xuhan34/20221110",
+    "save_period": 10,
+
+    "monitor": "max Mean_IoU",
+    "early_stop": 50,
+
+    "tensorboard": true,
+    "log_dir": "output/train/ats_sq_refactor/el/xuhan34/20221110",
+    "log_per_iter": 20,
+
+    "val": true,
+    "val_per_epochs": 5
+  }
+}
